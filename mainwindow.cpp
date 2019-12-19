@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     createMenus();
     setWindowTitle("Gbaldraw");
     resize(1280, 690);
-    ui->setupUi(this);
+    //ui->setupUi(this);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -94,7 +94,7 @@ void MainWindow::createActions(){
 
     clearScreenAct = new QAction(tr("&Clear Screen..."), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
-    connect(penColorAct, SIGNAL(triggered()), scribbleArea, SLOT(clearImage()));
+    connect(clearScreenAct, SIGNAL(triggered()), scribbleArea, SLOT(clearImage()));
 
     aboutAct = new QAction(tr("&About..."), this);
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));

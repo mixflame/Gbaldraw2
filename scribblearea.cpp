@@ -7,7 +7,7 @@
 #endif
 #endif
 
-#include "ScribbleArea.h"
+#include <scribblearea.h>
 
 ScribbleArea::ScribbleArea(QWidget *parent) : QWidget(parent)
 {
