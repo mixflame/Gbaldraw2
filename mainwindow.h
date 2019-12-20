@@ -3,6 +3,8 @@
 
 #include <QList>
 #include <QMainWindow>
+#include <QTcpSocket>
+#include <QTcpServer>
 
 class ScribbleArea;
 
@@ -28,6 +30,7 @@ private:
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *optionMenu;
+    QMenu *networkMenu;
     QMenu *helpMenu;
     QAction *openAct;
     QList<QAction *> saveAsActs;
@@ -38,6 +41,11 @@ private:
     QAction *aboutQtAct;
     QAction *exitAct;
     QAction *clearScreenAct;
+    QAction *startServerAct;
+    QString username;
+    QString serverPassword;
+    QString serverPort;
+    QTcpServer tcpServer;
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -48,6 +56,7 @@ private slots:
     void penColor();
     void penWidth();
     void about();
+    void startServer();
 
 };
 #endif // MAINWINDOW_H

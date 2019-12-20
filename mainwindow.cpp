@@ -64,6 +64,36 @@ void MainWindow::about(){
     QMessageBox::about(this, tr("About Gbaldraw2"), "https://gbalda.com");
 }
 
+void MainWindow::startServer(){
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Enter username"),
+                                         tr("User name:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+
+    if(ok) {
+        username = text;
+
+        bool ok2;
+        QString text2 = QInputDialog::getText(this, tr("Set server password"),
+                                             tr("Server password:"), QLineEdit::Normal,
+                                             "", &ok2);
+
+        if(ok2) {
+            serverPassword = text2;
+
+            bool ok3;
+            QString text3 = QInputDialog::getText(this, tr("Set server port"),
+                                                 tr("Server port:"), QLineEdit::Normal,
+                                                 "", &ok3);
+
+            if(ok3){
+                serverPort = text3;
+            }
+        }
+
+    }
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -101,6 +131,9 @@ void MainWindow::createActions(){
 
     aboutQtAct = new QAction(tr("About &Qt..."), this);
     connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
+    startServerAct = new QAction(tr("&Start Server"), this);
+    connect(startServerAct, SIGNAL(triggered()), this, SLOT(startServer()));
 }
 
 void MainWindow::createMenus(){
@@ -121,12 +154,16 @@ void MainWindow::createMenus(){
     optionMenu->addSeparator();
     optionMenu->addAction(clearScreenAct);
 
+    networkMenu = new QMenu(tr("&Network"), this);
+    networkMenu->addAction(startServerAct);
+
     helpMenu = new QMenu(tr("&Help"), this);
     helpMenu->addAction(aboutAct);
     helpMenu->addAction(aboutQtAct);
 
     menuBar()->addMenu(fileMenu);
     menuBar()->addMenu(optionMenu);
+    menuBar()->addMenu(networkMenu);
     menuBar()->addMenu(helpMenu);
 }
 
