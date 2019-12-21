@@ -5,6 +5,8 @@
 #include <QImage>
 #include <QPoint>
 #include <QWidget>
+#include <QJsonArray>
+#include <QJsonObject>
 
 class ScribbleArea : public QWidget {
     Q_OBJECT
@@ -20,9 +22,12 @@ public:
     QColor penColor() const {return myPenColor;}
     int penWidth() const {return myPenWidth;}
 
+    QJsonArray points;
+
 public slots:
     void clearImage();
     void print();
+    void redraw();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -32,7 +37,7 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    void drawLineTo(const QPoint &endPoint);
+    void drawLineTo(const QPoint &fromPoint, const QPoint &endPoint);
     void resizeImage(QImage *image, const QSize &newSize);
     bool modified;
     bool scribbling;
