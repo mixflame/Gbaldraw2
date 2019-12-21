@@ -3,8 +3,7 @@
 
 #include <QList>
 #include <QMainWindow>
-#include <QTcpSocket>
-#include <QTcpServer>
+#include <server.h>
 
 class ScribbleArea;
 
@@ -21,7 +20,7 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    //Ui::MainWindow *ui;
     void createActions();
     void createMenus();
     bool maybeSave();
@@ -45,7 +44,7 @@ private:
     QString username;
     QString serverPassword;
     QString serverPort;
-    QTcpServer tcpServer;
+    Server server;
 
 protected:
     void closeEvent(QCloseEvent *event) override;

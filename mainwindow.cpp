@@ -6,10 +6,10 @@
 #include <QMessageBox>
 #include <QImageWriter>
 #include "ui_mainwindow.h"
+#include "server.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
 {
     scribbleArea = new ScribbleArea;
     setCentralWidget(scribbleArea);
@@ -88,6 +88,8 @@ void MainWindow::startServer(){
 
             if(ok3){
                 serverPort = text3;
+
+                server.startServer();
             }
         }
 
@@ -96,7 +98,7 @@ void MainWindow::startServer(){
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    //delete ui;
 }
 
 void MainWindow::createActions(){
