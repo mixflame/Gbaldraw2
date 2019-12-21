@@ -58,14 +58,17 @@ void ScribbleArea::clearImage() {
 
 void ScribbleArea::redraw() {
     this->clearImage();
-
+    QColor oldColor = myPenColor;
     for(int i = 1; i < points.size(); i++) {
         QJsonObject lastObj = points[i - 1].toObject();
         QJsonObject thisObj = points[i].toObject();
         QPoint lastPoint(lastObj["x"].toInt(), lastObj["y"].toInt());
         QPoint endPoint(thisObj["x"].toInt(), thisObj["y"].toInt());
-        if(thisObj["scribbling"].toBool() && lastObj["scribbling"].toBool())
+        if(thisObj["scribbling"].toBool() && lastObj["scribbling"].toBool()) {
+            myPenColor = QColor(lastObj["r"].toInt(), lastObj["g"].toInt(), lastObj["b"].toInt());
+            myPenWidth = lastObj["width"].toInt();
             drawLineTo(lastPoint, endPoint);
+        }
     }
 }
 
