@@ -56,36 +56,81 @@ void ScribbleArea::clearImage() {
     update();
 }
 
+void ScribbleArea::addClick(int x, int y, bool dragging, int r, int g, int b, int width, QString clickName) {
+    // old way
+    QJsonObject point;
+    point["x"] = x;
+    point["y"] = y;
+    point["dragging"] = dragging;
+    point["r"] = r;
+    point["g"] = g;
+    point["b"] = b;
+    point["width"] = width;
+    point["username"] = clickName;
+
+    QString layerName;
+
+    if(!nameHash.contains(clickName)){
+        int layer = 0;
+        nameHash[clickName] = layer;
+        layerName = clickName + "_" + QString::number(layer);
+        QJsonArray layerArray;
+        layers[layerName] = layerArray;
+
+    } else {
+        if(dragging == false){
+            int layer = nameHash[clickName] + 1;
+            nameHash[clickName] = layer;
+            layerName = clickName + "_" + QString::number(layer);
+            QJsonArray layerArray;
+            layers[layerName] = layerArray;
+        } else {
+            int layer = nameHash[clickName];
+            layerName = clickName + "_" + QString::number(layer);
+        }
+    }
+
+    QJsonArray tempLayers = layers[layerName].toArray();
+    tempLayers.append(point);
+    layers[layerName] = tempLayers;
+
+    if(!layerOrder.contains(layerName))
+          layerOrder.append(layerName);
+
+    qDebug() << layerName;
+    qDebug() << QString::number(layerOrder.size());
+}
+
 void ScribbleArea::redraw() {
     this->clearImage();
     QColor oldColor = myPenColor;
-    for(int i = 1; i < points.size(); i++) {
-        QJsonObject lastObj = points[i - 1].toObject();
-        QJsonObject thisObj = points[i].toObject();
-        QPoint lastPoint(lastObj["x"].toInt(), lastObj["y"].toInt());
-        QPoint endPoint(thisObj["x"].toInt(), thisObj["y"].toInt());
-        if(thisObj["scribbling"].toBool() && lastObj["scribbling"].toBool()) {
-            myPenColor = QColor(lastObj["r"].toInt(), lastObj["g"].toInt(), lastObj["b"].toInt());
-            myPenWidth = lastObj["width"].toInt();
-            drawLineTo(lastPoint, endPoint);
+    int oldWidth = myPenWidth;
+    for(int j=0; j < layerOrder.size(); j++) {
+        //qDebug() << QString::number(j);
+        QString layer = layerOrder[j];
+        QJsonArray layerArray = layers[layer].toArray();
+        for(int i = 1; i < layerArray.size(); i++) {
+            QJsonObject lastObj = layerArray[i - 1].toObject();
+            QJsonObject thisObj = layerArray[i].toObject();
+            QPoint lastPoint(lastObj["x"].toInt(), lastObj["y"].toInt());
+            QPoint endPoint(thisObj["x"].toInt(), thisObj["y"].toInt());
+            if(thisObj["dragging"].toBool() && lastObj["dragging"].toBool()) {
+                myPenColor = QColor(lastObj["r"].toInt(), lastObj["g"].toInt(), lastObj["b"].toInt());
+                myPenWidth = lastObj["width"].toInt();
+                drawLineTo(lastPoint, endPoint);
+            }
         }
     }
+    myPenColor = oldColor;
+    myPenWidth = oldWidth;
 }
 
 void ScribbleArea::mousePressEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton) {
         lastPoint = event->pos();
-        scribbling = true;
+        scribbling = true; // mouse pressed
         // add click to json array
-        QJsonObject point;
-        point["x"] = lastPoint.x();
-        point["y"] = lastPoint.y();
-        point["scribbling"] = scribbling;
-        point["r"] = myPenColor.red();
-        point["g"] = myPenColor.green();
-        point["b"] = myPenColor.blue();
-        point["width"] = myPenWidth;
-        points.append(point);
+        addClick(lastPoint.x(), lastPoint.y(), false, myPenColor.red(), myPenColor.green(), myPenColor.blue(), myPenWidth, username);
 
         // todo: send point over network
     }
@@ -96,15 +141,8 @@ void ScribbleArea::mouseMoveEvent(QMouseEvent *event){
         QPoint endPoint = event->pos();
         //drawLineTo(lastPoint, endPoint);
         lastPoint = endPoint;
-        QJsonObject point;
-        point["x"] = lastPoint.x();
-        point["y"] = lastPoint.y();
-        point["scribbling"] = scribbling;
-        point["r"] = myPenColor.red();
-        point["g"] = myPenColor.green();
-        point["b"] = myPenColor.blue();
-        point["width"] = myPenWidth;
-        points.append(point);
+
+        addClick(lastPoint.x(), lastPoint.y(), true, myPenColor.red(), myPenColor.green(), myPenColor.blue(), myPenWidth, username);
 
         redraw();
     }
@@ -116,17 +154,6 @@ void ScribbleArea::mouseReleaseEvent(QMouseEvent *event) {
         //drawLineTo(lastPoint, endPoint);
         lastPoint = endPoint;
         scribbling = false;
-        QJsonObject point;
-        point["x"] = lastPoint.x();
-        point["y"] = lastPoint.y();
-        point["scribbling"] = scribbling;
-        point["r"] = myPenColor.red();
-        point["g"] = myPenColor.green();
-        point["b"] = myPenColor.blue();
-        point["width"] = myPenWidth;
-        points.append(point);
-
-        redraw();
     }
 }
 

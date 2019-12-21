@@ -41,9 +41,6 @@ private:
     QAction *exitAct;
     QAction *clearScreenAct;
     QAction *startServerAct;
-    QString username;
-    QString serverPassword;
-    QString serverPort;
     Server server;
 
 protected:

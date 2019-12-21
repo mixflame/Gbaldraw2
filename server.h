@@ -12,6 +12,8 @@ class Server : public QTcpServer
     Q_OBJECT
 public:
     explicit Server(QObject *parent = nullptr);
+    QString serverPassword;
+    QString serverPort;
     void startServer();
 
 protected:

@@ -22,11 +22,19 @@ public:
     QColor penColor() const {return myPenColor;}
     int penWidth() const {return myPenWidth;}
 
+    // store all points if needed
     QJsonArray points;
+
+    QHash<QString, int> nameHash;
+    QStringList layerOrder;
+    QJsonObject layers;
+
+    QString username; // our own username
 
 public slots:
     void clearImage();
     void print();
+    void addClick(int x, int y, bool scribbling, int r, int g, int b, int width, QString clickName);
     void redraw();
 
 protected:
@@ -45,6 +53,7 @@ private:
     int myPenWidth;
     QImage image;
     QPoint lastPoint;
+
 
 };
 
