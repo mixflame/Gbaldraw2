@@ -99,6 +99,22 @@ void MainWindow::startServer(){
 MainWindow::~MainWindow()
 {
     //delete ui;
+    delete scribbleArea;
+    delete openAct;
+    delete printAct;
+    delete exitAct;
+    delete penColorAct;
+    delete penWidthAct;
+    delete clearScreenAct;
+    delete aboutAct;
+    delete aboutQtAct;
+    delete startServerAct;
+    delete saveAsMenu;
+    delete fileMenu;
+    delete optionMenu;
+    delete networkMenu;
+    delete helpMenu;
+
 }
 
 void MainWindow::createActions(){
