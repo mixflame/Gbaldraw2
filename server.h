@@ -5,6 +5,8 @@
 #include <QTcpSocket>
 #include <QTcpServer>
 #include <QRandomGenerator>
+#include <QJsonArray>
+#include <QJsonObject>
 
 
 class Server : public QTcpServer
@@ -15,6 +17,8 @@ public:
     QString serverPassword;
     QString serverPort;
     void startServer();
+
+    QJsonArray* points;
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;

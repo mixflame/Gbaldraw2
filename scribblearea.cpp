@@ -67,6 +67,7 @@ void ScribbleArea::addClick(int x, int y, bool dragging, int r, int g, int b, in
     point["b"] = b;
     point["width"] = width;
     point["username"] = clickName;
+    points.append(point);
 
     QString layerName;
 

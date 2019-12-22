@@ -1,7 +1,7 @@
 #include "thread.h"
 
-Thread::Thread(int socketDescriptor, const QString &fortune, QObject *parent)
-    : QThread(parent), socketDescriptor(socketDescriptor), text(fortune)
+Thread::Thread(int socketDescriptor, QObject *parent)
+    : QThread(parent), socketDescriptor(socketDescriptor)
 {
 }
 
@@ -16,8 +16,14 @@ void Thread::run()
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
-    out << text;
-    tcpSocket.write(block);
+
+    for(int i = 0; i < this->points->size(); i++) {
+        QJsonObject point = this->points->at(i).toObject();
+        QJsonDocument doc(point);
+        out << doc.toJson();
+        tcpSocket.write(block);
+    }
+
     tcpSocket.disconnectFromHost();
     tcpSocket.waitForDisconnected();
 }

@@ -4,6 +4,10 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QDataStream>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
+
 
 
 class Thread : public QThread
@@ -11,16 +15,17 @@ class Thread : public QThread
     Q_OBJECT
 
 public:
-    Thread(int socketDescriptor, const QString &fortune, QObject *parent);
+    Thread(int socketDescriptor, QObject *parent);
 
     void run() override;
+
+    QJsonArray* points;
 
 signals:
     void error(QTcpSocket::SocketError socketError);
 
 private:
     int socketDescriptor;
-    QString text;
 };
 
 #endif // THREAD_H

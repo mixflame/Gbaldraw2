@@ -89,6 +89,7 @@ void MainWindow::startServer(){
             if(ok3){
                 server.serverPort = text3;
 
+                server.points = &(scribbleArea->points);
                 server.startServer();
             }
         }
