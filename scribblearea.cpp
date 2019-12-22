@@ -97,14 +97,12 @@ void ScribbleArea::addClick(int x, int y, bool dragging, int r, int g, int b, in
     if(!layerOrder.contains(layerName))
           layerOrder.append(layerName);
 
-    qDebug() << layerName;
-    qDebug() << QString::number(layerOrder.size());
+    //qDebug() << layerName;
+    //qDebug() << QString::number(layerOrder.size());
 }
 
 void ScribbleArea::redraw() {
     this->clearImage();
-    QColor oldColor = myPenColor;
-    int oldWidth = myPenWidth;
     for(int j=0; j < layerOrder.size(); j++) {
         //qDebug() << QString::number(j);
         QString layer = layerOrder[j];
@@ -115,14 +113,12 @@ void ScribbleArea::redraw() {
             QPoint lastPoint(lastObj["x"].toInt(), lastObj["y"].toInt());
             QPoint endPoint(thisObj["x"].toInt(), thisObj["y"].toInt());
             if(thisObj["dragging"].toBool() && lastObj["dragging"].toBool()) {
-                myPenColor = QColor(lastObj["r"].toInt(), lastObj["g"].toInt(), lastObj["b"].toInt());
-                myPenWidth = lastObj["width"].toInt();
-                drawLineTo(lastPoint, endPoint);
+                QColor penColor = QColor(lastObj["r"].toInt(), lastObj["g"].toInt(), lastObj["b"].toInt());
+                int penWidth = lastObj["width"].toInt();
+                drawLineTo(lastPoint, endPoint, penColor, penWidth);
             }
         }
     }
-    myPenColor = oldColor;
-    myPenWidth = oldWidth;
 }
 
 void ScribbleArea::mousePressEvent(QMouseEvent *event){
@@ -173,9 +169,9 @@ void ScribbleArea::resizeEvent(QResizeEvent *event){
     QWidget::resizeEvent(event);
 }
 
-void ScribbleArea::drawLineTo(const QPoint &fromPoint, const QPoint &endPoint){
+void ScribbleArea::drawLineTo(const QPoint &fromPoint, const QPoint &endPoint, QColor penColor, int penWidth){
     QPainter painter(&image);
-    painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.setPen(QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.drawLine(fromPoint, endPoint);
     modified = true;
     int rad = (myPenWidth / 2) + 2;

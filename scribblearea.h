@@ -45,7 +45,7 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    void drawLineTo(const QPoint &fromPoint, const QPoint &endPoint);
+    void drawLineTo(const QPoint &fromPoint, const QPoint &endPoint, QColor penColor, int penWidth);
     void resizeImage(QImage *image, const QSize &newSize);
     bool modified;
     bool scribbling;
