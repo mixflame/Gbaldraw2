@@ -79,7 +79,7 @@ void MainWindow::startServer(){
                                              "", &ok2);
 
         if(ok2) {
-            server.serverPassword = text2;
+            //server.serverPassword = text2;
 
             bool ok3;
             QString text3 = QInputDialog::getText(this, tr("Set server port"),
@@ -87,7 +87,7 @@ void MainWindow::startServer(){
                                                  "", &ok3);
 
             if(ok3){
-                server.serverPort = text3;
+                //server.serverPort = text3;
 
                 server.points = &(scribbleArea->points);
                 server.startServer();

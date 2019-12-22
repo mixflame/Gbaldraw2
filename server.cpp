@@ -1,57 +1,114 @@
 #include "server.h"
-#include <thread.h>
 
 Server::Server(QObject *parent) : QTcpServer(parent)
 {
 
 }
 
-void Server::incomingConnection(qintptr socketDescriptor)
-{
-//    Thread *thread = new Thread(socketDescriptor, this);
-//    thread->points = points;
-//    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-//    thread->start();
-    QTcpSocket tcpSocket;
-    if (!tcpSocket.setSocketDescriptor(socketDescriptor)) {
-//        emit error(tcpSocket.error());
-        return;
-    }
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
+//void Server::incomingConnection(qintptr socketDescriptor)
+//{
+////    Thread *thread = new Thread(socketDescriptor, this);
+////    thread->points = points;
+////    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+////    thread->start();
+//    QTcpSocket tcpSocket;
+//    if (!tcpSocket.setSocketDescriptor(socketDescriptor)) {
+////        emit error(tcpSocket.error());
+//        return;
+//    }
+//    QByteArray block;
+//    QDataStream out(&block, QIODevice::WriteOnly);
+//    out.setVersion(QDataStream::Qt_5_12);
 
-    for(int i = 0; i < this->points->size(); i++) {
-        QJsonObject point = this->points->at(i).toObject();
-        QJsonDocument doc(point);
-        out << doc.toJson() << "\n";
-        tcpSocket.write(block);
-    }
+//    for(int i = 0; i < this->points->size(); i++) {
+//        QJsonObject point = this->points->at(i).toObject();
+//        QJsonDocument doc(point);
+//        out << doc.toJson() << "\n";
+//        tcpSocket.write(block);
+//    }
 
-    tcpSocket.disconnectFromHost();
-    tcpSocket.waitForDisconnected();
-}
+////    tcpSocket.disconnectFromHost();
+////    tcpSocket.waitForDisconnected();
+//}
 
 void Server::startServer() {
     if(!this->listen(QHostAddress::Any, 9999))
     {
-        qDebug() << "Server could not start";
+        emit logMessage(QStringLiteral("Server could not start."));
     }
     else
     {
-        qDebug() << "Server started!";
+        emit logMessage(QStringLiteral("Server started."));
     }
 }
 
-//void Server::newConnection()
-//{
-//    // need to grab the socket
-//    QTcpSocket *socket = server->nextPendingConnection();
+void Server::stopServer() {
+    foreach(ServerWorker* worker, m_clients)
+        delete worker;
+    if(this->isListening()) {
+        this->close();
+    }
+}
 
-//    socket->write("Hello client\r\n");
-//    socket->flush();
+void Server::incomingConnection(qintptr socketDescriptor)
+{
+    // This method will get called every time a client tries to connect.
+    // We create an object that will take care of the communication with this client
+    ServerWorker *worker = new ServerWorker(this);
+    // we attempt to bind the worker to the client
+    if (!worker->setSocketDescriptor(socketDescriptor)) {
+        // if we fail we clean up
+        worker->deleteLater();
+        return;
+    }
+    // connect the signals coming from the object that will take care of the
+    // communication with this client to the slots in the central server
+    connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
+    connect(worker, &ServerWorker::error, this, std::bind(&Server::userError, this, worker));
+    connect(worker, &ServerWorker::jsonReceived, this, std::bind(&Server::jsonReceived, this, worker, std::placeholders::_1));
+    connect(worker, &ServerWorker::logMessage, this, &Server::logMessage);
+    // we append the new worker to a list of all the objects that communicate to a single client
+    m_clients.append(worker);
+    // we log the event
+    emit logMessage(QStringLiteral("New client Connected"));
 
-//    socket->waitForBytesWritten(3000);
+        for(int i = 0; i < this->points->size(); i++) {
+            QJsonObject point = this->points->at(i).toObject();
+            worker->sendJson(point);
+        }
+}
 
-//    socket->close();
-//}
+void logMessage(const QString &msg) {
+    qDebug() << msg;
+}
+
+void Server::jsonReceived(ServerWorker *sender, const QJsonObject &doc) {
+    // add it to my own canvas and broadcast
+
+    broadcast(doc, sender);
+}
+
+void Server::userError(ServerWorker *sender) {
+    emit logMessage(sender->userName() + QStringLiteral(" error"));
+}
+
+void Server::userDisconnected(ServerWorker *sender) {
+    emit logMessage(sender->userName() + QStringLiteral(" disconnected"));
+    m_clients.remove(m_clients.indexOf(sender));
+    delete sender;
+}
+void Server::sendJson(ServerWorker *destination, const QJsonObject &message)
+{
+    Q_ASSERT(destination); // make sure destination is not null
+    destination->sendJson(message); // call directly the worker method
+}
+
+void Server::broadcast(const QJsonObject &message, ServerWorker *exclude)
+{
+    // iterate over all the workers that interact with the clients
+    for (ServerWorker *worker : m_clients) {
+        if (worker == exclude)
+            continue; // skip the worker that should be excluded
+        sendJson(worker, message); //send the message to the worker
+    }
+}
