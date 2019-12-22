@@ -34,7 +34,7 @@ public:
 public slots:
     void clearImage();
     void print();
-    void addClick(int x, int y, bool scribbling, int r, int g, int b, int width, QString clickName);
+    void addClick(int x, int y, bool dragging, int r, int g, int b, int width, QString clickName);
     void redraw();
 
 protected:

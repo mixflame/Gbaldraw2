@@ -72,8 +72,8 @@ void Server::incomingConnection(qintptr socketDescriptor)
     // we log the event
     emit logMessage(QStringLiteral("New client Connected"));
 
-        for(int i = 0; i < this->points->size(); i++) {
-            QJsonObject point = this->points->at(i).toObject();
+        for(int i = 0; i < this->scribbleArea->points.size(); i++) {
+            QJsonObject point = this->scribbleArea->points.at(i).toObject();
             worker->sendJson(point);
         }
 }
@@ -84,7 +84,8 @@ void logMessage(const QString &msg) {
 
 void Server::jsonReceived(ServerWorker *sender, const QJsonObject &doc) {
     // add it to my own canvas and broadcast
-
+    scribbleArea->addClick(doc["x"].toInt(), doc["y"].toInt(), doc["dragging"].toBool(), doc["r"].toInt(), doc["g"].toInt(), doc["b"].toInt(), doc["width"].toInt(), doc["username"].toString());
+    scribbleArea->redraw();
     broadcast(doc, sender);
 }
 

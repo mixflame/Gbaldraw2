@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <serverworker.h>
+#include <scribblearea.h>
 
 
 class Server : public QTcpServer
@@ -17,7 +18,7 @@ class Server : public QTcpServer
     Q_DISABLE_COPY(Server)
 public:
     explicit Server(QObject *parent = nullptr);
-    QJsonArray* points;
+    ScribbleArea *scribbleArea;
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 signals:
