@@ -19,14 +19,12 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     scribblearea.cpp \
-    server.cpp \
-    thread.cpp
+    server.cpp
 
 HEADERS += \
     mainwindow.h \
     scribblearea.h \
-    server.h \
-    thread.h
+    server.h
 
 FORMS +=
 

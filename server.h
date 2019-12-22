@@ -24,7 +24,6 @@ protected:
     void incomingConnection(qintptr socketDescriptor) override;
 
 private:
-    QStringList fortunes;
 
 };
 
