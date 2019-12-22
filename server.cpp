@@ -113,3 +113,11 @@ void Server::broadcast(const QJsonObject &message, ServerWorker *exclude)
         sendJson(worker, message); //send the message to the worker
     }
 }
+
+void Server::broadcast(const QJsonObject &message)
+{
+    // iterate over all the workers that interact with the clients
+    for (ServerWorker *worker : m_clients) {
+        sendJson(worker, message); //send the message to the worker
+    }
+}

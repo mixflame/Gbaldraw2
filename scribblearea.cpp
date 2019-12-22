@@ -8,6 +8,7 @@
 #endif
 
 #include <scribblearea.h>
+#include "mainwindow.h"
 
 ScribbleArea::ScribbleArea(QWidget *parent) : QWidget(parent)
 {
@@ -130,6 +131,7 @@ void ScribbleArea::mousePressEvent(QMouseEvent *event){
         addClick(lastPoint.x(), lastPoint.y(), false, myPenColor.red(), myPenColor.green(), myPenColor.blue(), myPenWidth, username);
 
         // todo: send point over network
+        ((MainWindow*)parentWidget())->server.broadcast(points.last().toObject());
     }
 }
 
@@ -140,6 +142,8 @@ void ScribbleArea::mouseMoveEvent(QMouseEvent *event){
         lastPoint = endPoint;
 
         addClick(lastPoint.x(), lastPoint.y(), true, myPenColor.red(), myPenColor.green(), myPenColor.blue(), myPenWidth, username);
+
+        ((MainWindow*)parentWidget())->server.broadcast(points.last().toObject());
 
         redraw();
     }

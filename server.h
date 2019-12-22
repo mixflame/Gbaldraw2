@@ -18,6 +18,7 @@ class Server : public QTcpServer
     Q_DISABLE_COPY(Server)
 public:
     explicit Server(QObject *parent = nullptr);
+    void broadcast(const QJsonObject &message);
     ScribbleArea *scribbleArea;
 protected:
     void incomingConnection(qintptr socketDescriptor) override;

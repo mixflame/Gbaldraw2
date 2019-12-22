@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    Server server;
 
 private:
     //Ui::MainWindow *ui;
@@ -41,7 +42,7 @@ private:
     QAction *exitAct;
     QAction *clearScreenAct;
     QAction *startServerAct;
-    Server server;
+
 
 protected:
     void closeEvent(QCloseEvent *event) override;
