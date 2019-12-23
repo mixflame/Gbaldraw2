@@ -34,11 +34,11 @@ Server::Server(QObject *parent) : QTcpServer(parent)
 void Server::startServer() {
     if(!this->listen(QHostAddress::Any, 9999))
     {
-        emit logMessage(QStringLiteral("Server could not start."));
+        logMessage(QStringLiteral("Server could not start."));
     }
     else
     {
-        emit logMessage(QStringLiteral("Server started."));
+        logMessage(QStringLiteral("Server started."));
     }
 }
 
@@ -70,7 +70,7 @@ void Server::incomingConnection(qintptr socketDescriptor)
     // we append the new worker to a list of all the objects that communicate to a single client
     m_clients.append(worker);
     // we log the event
-    emit logMessage(QStringLiteral("New client Connected"));
+    logMessage(QStringLiteral("New client Connected"));
 
         for(int i = 0; i < this->scribbleArea->points.size(); i++) {
             QJsonObject point = this->scribbleArea->points.at(i).toObject();
@@ -78,7 +78,7 @@ void Server::incomingConnection(qintptr socketDescriptor)
         }
 }
 
-void logMessage(const QString &msg) {
+void Server::logMessage(const QString &msg) {
     qDebug() << msg;
 }
 
@@ -90,11 +90,11 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &doc) {
 }
 
 void Server::userError(ServerWorker *sender) {
-    emit logMessage(sender->userName() + QStringLiteral(" error"));
+    logMessage(sender->userName() + QStringLiteral(" error"));
 }
 
 void Server::userDisconnected(ServerWorker *sender) {
-    emit logMessage(sender->userName() + QStringLiteral(" disconnected"));
+    logMessage(sender->userName() + QStringLiteral(" disconnected"));
     m_clients.remove(m_clients.indexOf(sender));
     delete sender;
 }

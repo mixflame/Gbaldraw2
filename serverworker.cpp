@@ -78,7 +78,7 @@ void ServerWorker::sendJson(const QJsonObject &json)
     emit logMessage("Sending to " + userName() + " - " + QString::fromUtf8(jsonData));
     // we send the message to the socket in the exact same way we did in the client
     QDataStream socketStream(m_serverSocket);
-    socketStream.setVersion(QDataStream::Qt_5_7);
+    socketStream.setVersion(QDataStream::Qt_5_12);
     socketStream << jsonData;
 }
 

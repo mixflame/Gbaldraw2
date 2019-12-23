@@ -17,16 +17,17 @@ class Server : public QTcpServer
     Q_OBJECT
     Q_DISABLE_COPY(Server)
 public:
-    explicit Server(QObject *parent = nullptr);
+    explicit Server(QObject *parent = 0);
     void broadcast(const QJsonObject &message);
     ScribbleArea *scribbleArea;
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 signals:
-    void logMessage(const QString &msg);
+
 public slots:
     void startServer();
     void stopServer();
+    void logMessage(const QString &msg);
 private slots:
     void broadcast(const QJsonObject &message, ServerWorker *exclude);
     void jsonReceived(ServerWorker *sender, const QJsonObject &doc);

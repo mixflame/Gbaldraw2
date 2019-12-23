@@ -4,6 +4,7 @@
 #include <QList>
 #include <QMainWindow>
 #include <server.h>
+#include <client.h>
 
 class ScribbleArea;
 
@@ -18,7 +19,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    Client client;
     Server server;
+    ScribbleArea *scribbleArea;
 
 private:
     //Ui::MainWindow *ui;
@@ -26,7 +29,7 @@ private:
     void createMenus();
     bool maybeSave();
     bool saveFile(const QByteArray &fileFormat);
-    ScribbleArea *scribbleArea;
+
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *optionMenu;
@@ -42,6 +45,7 @@ private:
     QAction *exitAct;
     QAction *clearScreenAct;
     QAction *startServerAct;
+    QAction *startClientAct;
 
 
 protected:
@@ -54,6 +58,7 @@ private slots:
     void penWidth();
     void about();
     void startServer();
+    void startClient();
 
 };
 #endif // MAINWINDOW_H

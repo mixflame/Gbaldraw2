@@ -130,8 +130,9 @@ void ScribbleArea::mousePressEvent(QMouseEvent *event){
         // add click to json array
         addClick(lastPoint.x(), lastPoint.y(), false, myPenColor.red(), myPenColor.green(), myPenColor.blue(), myPenWidth, username);
 
-        // todo: send point over network
+        // send point over network (server broadcast)
         ((MainWindow*)parentWidget())->server.broadcast(points.last().toObject());
+//        ((MainWindow*)parentWidget())->client
     }
 }
 

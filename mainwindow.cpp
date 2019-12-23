@@ -96,6 +96,21 @@ void MainWindow::startServer(){
     }
 }
 
+void MainWindow::startClient(){
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Enter ip:port"),
+                                         tr("ip:port"), QLineEdit::Normal,
+                                         "127.0.0.1:9999", &ok);
+
+    if(ok) {
+
+            QHostAddress address;
+            address.setAddress(text.split(":").first());
+            client.scribbleArea = scribbleArea;
+            client.connectToServer(address, text.split(":").last().toInt());
+    }
+}
+
 MainWindow::~MainWindow()
 {
     //delete ui;
@@ -109,6 +124,7 @@ MainWindow::~MainWindow()
     delete aboutAct;
     delete aboutQtAct;
     delete startServerAct;
+    delete startClientAct;
     delete saveAsMenu;
     delete fileMenu;
     delete optionMenu;
@@ -152,6 +168,9 @@ void MainWindow::createActions(){
 
     startServerAct = new QAction(tr("&Start Server"), this);
     connect(startServerAct, SIGNAL(triggered()), this, SLOT(startServer()));
+
+    startClientAct = new QAction(tr("&Connect to Server"), this);
+    connect(startClientAct, SIGNAL(triggered()), this, SLOT(startClient()));
 }
 
 void MainWindow::createMenus(){
@@ -174,6 +193,7 @@ void MainWindow::createMenus(){
 
     networkMenu = new QMenu(tr("&Network"), this);
     networkMenu->addAction(startServerAct);
+    networkMenu->addAction(startClientAct);
 
     helpMenu = new QMenu(tr("&Help"), this);
     helpMenu->addAction(aboutAct);
