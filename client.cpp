@@ -33,9 +33,23 @@ void Client::disconnectFromHost()
 }
 void Client::connectToServer(const QHostAddress &address, quint16 port)
 {
+    // on client connect, destroy internal image
+    QJsonArray points;
+
+    QHash<QString, int> nameHash;
+    QStringList layerOrder;
+    QJsonObject layers;
+
+    scribbleArea->points = points;
+    scribbleArea->nameHash = nameHash;
+    scribbleArea->layerOrder = layerOrder;
+    scribbleArea->layers = layers;
+
     m_clientSocket->connectToHost(address, port);
-    bool connected = (m_clientSocket->state() == QTcpSocket::ConnectedState);
-    qDebug() << "Connected: " + QString::number(connected);
+//    bool connected = (m_clientSocket->state() == QTcpSocket::ConnectedState);
+//    qDebug() << "Connected: " + QString::number(connected);
+
+
 }
 
 
