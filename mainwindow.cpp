@@ -73,25 +73,19 @@ void MainWindow::startServer(){
     if(ok) {
         scribbleArea->username = text;
 
-        bool ok2;
-        QString text2 = QInputDialog::getText(this, tr("Set server password"),
-                                             tr("Server password:"), QLineEdit::Normal,
-                                             "", &ok2);
-
-        if(ok2) {
             //server.serverPassword = text2;
 
-            bool ok3;
-            QString text3 = QInputDialog::getText(this, tr("Set server port"),
+            bool ok2;
+            QString text2 = QInputDialog::getText(this, tr("Set server port"),
                                                  tr("Server port:"), QLineEdit::Normal,
-                                                 "", &ok3);
+                                                 "9999", &ok2);
 
-            if(ok3){
+            if(ok2){
                 //server.serverPort = text3;
                 server.scribbleArea = scribbleArea;
+                server.serverPort = text2.toInt();
                 server.startServer();
             }
-        }
 
     }
 }
@@ -120,7 +114,7 @@ MainWindow::~MainWindow()
     delete exitAct;
     delete penColorAct;
     delete penWidthAct;
-    delete clearScreenAct;
+//    delete clearScreenAct;
     delete aboutAct;
     delete aboutQtAct;
     delete startServerAct;
@@ -156,9 +150,9 @@ void MainWindow::createActions(){
     penWidthAct = new QAction(tr("&Pen Width..."), this);
     connect(penWidthAct, SIGNAL(triggered()), this, SLOT(penWidth()));
 
-    clearScreenAct = new QAction(tr("&Clear Screen..."), this);
-    clearScreenAct->setShortcut(tr("Ctrl+L"));
-    connect(clearScreenAct, SIGNAL(triggered()), scribbleArea, SLOT(clearImage()));
+//    clearScreenAct = new QAction(tr("&Clear Screen..."), this);
+//    clearScreenAct->setShortcut(tr("Ctrl+L"));
+//    connect(clearScreenAct, SIGNAL(triggered()), scribbleArea, SLOT(clearImage()));
 
     aboutAct = new QAction(tr("&About..."), this);
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
@@ -189,7 +183,7 @@ void MainWindow::createMenus(){
     optionMenu->addAction(penColorAct);
     optionMenu->addAction(penWidthAct);
     optionMenu->addSeparator();
-    optionMenu->addAction(clearScreenAct);
+//    optionMenu->addAction(clearScreenAct);
 
     networkMenu = new QMenu(tr("&Network"), this);
     networkMenu->addAction(startServerAct);

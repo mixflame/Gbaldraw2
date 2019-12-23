@@ -43,7 +43,7 @@ private:
     QAction *aboutAct;
     QAction *aboutQtAct;
     QAction *exitAct;
-    QAction *clearScreenAct;
+//    QAction *clearScreenAct;
     QAction *startServerAct;
     QAction *startClientAct;
 

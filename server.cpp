@@ -32,7 +32,7 @@ Server::Server(QObject *parent) : QTcpServer(parent)
 //}
 
 void Server::startServer() {
-    if(!this->listen(QHostAddress::Any, 9999))
+    if(!this->listen(QHostAddress::Any, serverPort))
     {
         logMessage(QStringLiteral("Server could not start."));
     }

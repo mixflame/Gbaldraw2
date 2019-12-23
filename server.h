@@ -20,6 +20,7 @@ public:
     explicit Server(QObject *parent = 0);
     void broadcast(const QJsonObject &message);
     ScribbleArea *scribbleArea;
+    int serverPort;
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 signals:
