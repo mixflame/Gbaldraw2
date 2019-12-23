@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <scribblearea.h>
+#include <QCoreApplication>
 
 class Client : public QObject
 {

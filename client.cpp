@@ -71,6 +71,7 @@ void Client::onReadyRead()
     socketStream.setVersion(QDataStream::Qt_5_7);
     // start an infinite loop
     for (;;) {
+        QCoreApplication::processEvents();
         // we start a transaction so we can revert to the previous state in case we try to read more data than is available on the socket
         socketStream.startTransaction();
         // we try to read the JSON data

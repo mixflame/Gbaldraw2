@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QCoreApplication>
 
 class ServerWorker : public QObject
 {
