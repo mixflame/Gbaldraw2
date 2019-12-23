@@ -132,7 +132,8 @@ void ScribbleArea::mousePressEvent(QMouseEvent *event){
 
         // send point over network (server broadcast)
         ((MainWindow*)parentWidget())->server.broadcast(points.last().toObject());
-//        ((MainWindow*)parentWidget())->client
+        // send point (client to server)
+        ((MainWindow*)parentWidget())->client.sendPoint(points.last().toObject());
     }
 }
 
@@ -145,6 +146,7 @@ void ScribbleArea::mouseMoveEvent(QMouseEvent *event){
         addClick(lastPoint.x(), lastPoint.y(), true, myPenColor.red(), myPenColor.green(), myPenColor.blue(), myPenWidth, username);
 
         ((MainWindow*)parentWidget())->server.broadcast(points.last().toObject());
+        ((MainWindow*)parentWidget())->client.sendPoint(points.last().toObject());
 
         redraw();
     }
