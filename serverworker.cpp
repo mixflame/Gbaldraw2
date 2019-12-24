@@ -4,6 +4,7 @@ ServerWorker::ServerWorker(QObject *parent)
     : QObject(parent)
     , m_serverSocket(new QTcpSocket(this))
 {
+    m_serverSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
     // connect readyRead() to the slot that will take care of reading the data in
     connect(m_serverSocket, &QTcpSocket::readyRead, this, &ServerWorker::receiveJson);
     // forward the disconnected and error signals coming from the socket

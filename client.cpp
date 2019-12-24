@@ -5,6 +5,7 @@ Client::Client(QObject *parent)
     , m_clientSocket(new QTcpSocket(this))
     , m_loggedIn(false)
 {
+    m_clientSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
     // Forward the connected and disconnected signals
     connect(m_clientSocket, &QTcpSocket::connected, this, &Client::connected);
     connect(m_clientSocket, &QTcpSocket::disconnected, this, &Client::disconnected);
