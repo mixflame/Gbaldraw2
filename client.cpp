@@ -27,7 +27,7 @@ void Client::sendPoint(const QJsonObject point)
     // send the JSON using QDataStream
     clientStream << QJsonDocument(point).toJson(QJsonDocument::Compact);
 
-    m_clientSocket->flush();
+//    m_clientSocket->flush();
 }
 
 void Client::disconnectFromHost()
