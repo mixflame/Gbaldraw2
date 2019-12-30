@@ -7,8 +7,9 @@
 #include <QWidget>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QOpenGLWidget>
 
-class ScribbleArea : public QWidget {
+class ScribbleArea : public QOpenGLWidget {
     Q_OBJECT
 
 public:

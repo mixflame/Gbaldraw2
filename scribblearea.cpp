@@ -10,7 +10,7 @@
 #include <scribblearea.h>
 #include "mainwindow.h"
 
-ScribbleArea::ScribbleArea(QWidget *parent) : QWidget(parent)
+ScribbleArea::ScribbleArea(QWidget *parent) : QOpenGLWidget(parent)
 {
     setAttribute(Qt::WA_StaticContents);
     modified = false;
